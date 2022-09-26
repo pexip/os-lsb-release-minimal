@@ -1,0 +1,45 @@
+lsb-release-minimal (12.0-1) unstable; urgency=medium
+
+  * New upstream release
+  * d/control: Rename binary package to `lsb-release`
+  * d/control: Build transitional package
+  * d/tests/alternative-bin-sh: Test with busybox sh
+
+ -- Gioele Barabucci <gioele@svario.it>  Mon, 26 Sep 2022 22:06:28 +0200
+
+lsb-release-minimal (0.6-2) unstable; urgency=medium
+
+  * d/tests/alternative-bin-sh: Test with dash and bash
+
+ -- Gioele Barabucci <gioele@svario.it>  Sat, 20 Aug 2022 07:48:28 +0200
+
+lsb-release-minimal (0.6-1) unstable; urgency=medium
+
+  * New upstream release
+  * d/control: Build-Depend on bats for the testsuite
+  * d/gitlab-ci: Add standard CI instructions
+  * d/tests: Add autopkgtests
+
+ -- Gioele Barabucci <gioele@svario.it>  Wed, 10 Aug 2022 15:36:02 +0200
+
+lsb-release-minimal (0.5-1) unstable; urgency=medium
+
+  * New upstream release
+  * d/control: Mark package as Multi-Arch: foreign
+
+ -- Gioele Barabucci <gioele@svario.it>  Tue, 09 Aug 2022 17:08:28 +0200
+
+lsb-release-minimal (0.4-1) unstable; urgency=medium
+
+  * New upstream release
+  * Upload to unstable
+  * d/control: Bump Standards-Version to 4.6.1 (no changes needed)
+  * d/control: Build-Depend on podlators-perl for pod2man
+
+ -- Gioele Barabucci <gioele@svario.it>  Fri, 29 Jul 2022 22:23:23 +0200
+
+lsb-release-minimal (0.3-1) experimental; urgency=medium
+
+  * Initial upstream release (Closes: #1002831)
+
+ -- Gioele Barabucci <gioele@svario.it>  Tue, 15 Feb 2022 20:21:15 +0100

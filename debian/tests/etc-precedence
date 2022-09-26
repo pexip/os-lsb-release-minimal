@@ -1,0 +1,43 @@
+#!/bin/sh
+
+set -eu
+
+echo "Setting up /usr/lib/os-release..."
+cat > /usr/lib/os-release <<EOF
+ID=Debian
+VERSION_CODENAME=sid
+EOF
+echo "OK"
+
+echo "Removing /etc/os-release..."
+rm -f /etc/os-release
+echo "OK"
+
+echo "Checking that values are read from /usr/lib/os-release..."
+test "$(lsb_release --short --id)" = "Debian"
+test "$(lsb_release --short --release)" = "n/a"
+test "$(lsb_release --short --codename)" = "sid"
+echo "OK"
+
+echo "Setting up /etc/os-release..."
+cat > /etc/os-release <<EOF
+ID=MyDistro
+VERSION_ID=123
+EOF
+echo "OK"
+
+echo "Checking that values are read from /etc/os-release..."
+test "$(lsb_release --short --id)" = "MyDistro"
+test "$(lsb_release --short --release)" = "123"
+test "$(lsb_release --short --codename)" = "n/a"
+echo "OK"
+
+echo "Removing /usr/lib/os-release..."
+rm -f /usr/lib/os-release
+echo "OK"
+
+echo "Checking that values are still read from /etc/os-release..."
+test "$(lsb_release --short --id)" = "MyDistro"
+test "$(lsb_release --short --release)" = "123"
+test "$(lsb_release --short --codename)" = "n/a"
+echo "OK"

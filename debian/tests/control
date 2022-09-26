@@ -1,0 +1,9 @@
+Tests:
+ etc-precedence,
+ no-os-release,
+Restrictions: breaks-testbed, needs-root
+
+Tests:
+ alternative-bin-sh,
+Depends: bats, shellcheck, bash, busybox, dash
+Restrictions: breaks-testbed, needs-root

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -eu
+
+echo "Removing /usr/lib/os-release..."
+rm -f /usr/lib/os-release
+echo "OK"
+
+echo "Removing /etc/os-release..."
+rm -f /etc/os-release
+echo "OK"
+
+echo "Checking whether lsb_release tollerates the missing os-release file"
+output="$(lsb_release --all --short)"
+values="$(echo "$output" | sort | uniq)"
+test "$values" = "n/a"
+echo "OK"

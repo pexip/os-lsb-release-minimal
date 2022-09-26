@@ -1,0 +1,30 @@
+#!/bin/sh
+
+set -eu
+
+echo "Pointing /bin/sh to /bin/dash"
+ln -s dash /bin/sh.new
+mv /bin/sh.new /bin/sh
+/bin/sh -c 'test "${BASH_VERSION:-x}" = "x"'
+echo "OK"
+
+echo "Running the test suite with dash..."
+make check
+
+echo "Pointing /bin/sh to /bin/bash"
+ln -s bash /bin/sh.new
+mv /bin/sh.new /bin/sh
+/bin/sh -c 'test "${BASH_VERSION:-x}" != "x"'
+echo "OK"
+
+echo "Running the test suite with bash..."
+make check
+
+echo "Pointing /bin/sh to /bin/busybox"
+ln -s busybox /bin/sh.new
+mv /bin/sh.new /bin/sh
+/bin/sh -c 'test "${BASH_VERSION:-x}" = "x"'
+echo "OK"
+
+echo "Running the test suite with busybox sh..."
+make check
