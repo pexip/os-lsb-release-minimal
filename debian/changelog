@@ -1,4 +1,4 @@
-lsb-release-minimal (12.0-1pexip1) pexip; urgency=medium
+lsb-release-minimal (12.0-1pexip1) pexip-bookworm; urgency=medium
 
   * Prepare Pexip packaging
 
