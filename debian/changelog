@@ -1,3 +1,9 @@
+lsb-release-minimal (12.0-1pexip1) pexip; urgency=medium
+
+  * Prepare Pexip packaging
+
+ -- Mark Hymers <mark.hymers@pexip.com>  Tue, 19 Dec 2023 19:00:59 +0000
+
 lsb-release-minimal (12.0-1) unstable; urgency=medium
 
   * New upstream release
