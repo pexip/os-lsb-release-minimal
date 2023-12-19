@@ -1,0 +1,94 @@
+=encoding UTF8
+
+=head1 NAME
+
+lsb_release - print distribution-specific information (minimal
+implementation).
+
+=head1 SYNOPSIS
+
+B<lsb_release> I<[options]>
+
+=head1 DESCRIPTION
+
+This is a bare-bones version of the B<lsb_release> command,
+implemented as a tiny POSIX shell script (less than 100 lines of
+commented code).
+
+Instead of using LSB packages, this version of B<lsb_release> uses the
+information in F</etc/os-release> and F</usr/lib/os-release>.
+Nevertheless, the output of this version is byte-for-byte compatible
+with the Python-based version provided by Debian and its derivatives.
+
+Using this implementation it is possible to avoid installing Python in a
+base OS image while still retaining compatibility with older scripts that
+expect B<lsb_release> to exist.
+
+=head1 OPTIONS
+
+The program follows the usual GNU command line syntax, with long options
+starting with two dashes (C<-->).  A summary of options are included below.
+
+=over 4
+
+=item B<-h>, B<--help>
+
+Show a help message with a list of options and exit.
+
+=item B<-v>, B<--version>
+
+Show LSB modules this system supports.
+
+=item B<-i>, B<--id>
+
+Show distributor ID.
+
+=item B<-d>, B<--description>
+
+Show description of this distribution.
+
+=item B<-r>, B<--release>
+
+Show release number of this distribution.
+
+=item B<-c>, B<--codename>
+
+Show code name of this distribution.
+
+=item B<-a>, B<--all>
+
+Show all of the above information.
+
+=item B<-s>, B<--short>
+
+Show requested information in short format.
+
+=back
+
+=head1 FILES
+
+=over 4
+
+=item F</usr/lib/os-release>
+
+Distribution-provided file with operating system identification data.
+
+=item F</etc/os-release>
+
+Machine-specific file with operating system identification data.
+If present, F</etc/os-release> is read instead of F</usr/lib/os-release>.
+
+=back
+
+=head1 SEE ALSO
+
+L<os-release(5)>
+
+=head1 AUTHOR
+
+Gioele Barabucci L<https://gioele.io>
+
+=head1 LICENSE
+
+This implementation of B<lsb_release> is free software released under
+the terms of the ISC license.
