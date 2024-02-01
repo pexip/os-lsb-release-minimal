@@ -1,3 +1,9 @@
+lsb-release-minimal (12.0-1+pexip24u2) pexip-bookworm; urgency=medium
+
+  * New versioning scheme
+
+ -- Mark Hymers <mark.hymers@pexip.com>  Thu, 01 Feb 2024 16:11:34 +0000
+
 lsb-release-minimal (12.0-1pexip1) pexip-bookworm; urgency=medium
 
   * Prepare Pexip packaging
