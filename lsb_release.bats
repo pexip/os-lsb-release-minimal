@@ -1,15 +1,10 @@
 #!/usr/bin/env bats
 
 bats_require_minimum_version 1.5.0
+bats_load_library "bats-support"
+bats_load_library "bats-assert"
 
 LSB_RELEASE="$BATS_TEST_DIRNAME/lsb_release"
-
-assert_equal () {
-	[ "$1" = "$2" ] && return 0
-
-	echo "expected '$2', got '$1'" >&2
-	return 1
-}
 
 assert_equal_ws () {
 	local s1=$(echo "$1" | sed -E -e '/\s+/ /')
@@ -41,15 +36,73 @@ skip_if_no_unicode () {
 	fi
 }
 
+run_in_prog () {
+	run --separate-stderr "$@"
+}
+
+run_in_tty () {
+	local stderr_file="$BATS_TEST_TMPDIR/stderr"
+	run --separate-stderr sh -c "script -eqfc \"sh -c '$* 2>$stderr_file'\" /dev/null ; cat $stderr_file >&2"
+	echo "$BASH_RUN_COMMAND"
+}
+
 @test "No output without options" {
 	export LSB_OS_RELEASE="$BATS_TEST_TMPDIR/os-release"
 
 	echo "$OS_RELEASE_UBUNTU_2204" > "$LSB_OS_RELEASE"
 
-        run $LSB_RELEASE
+	run_in_prog $LSB_RELEASE
 
-        assert_equal "$status" "0"
-        assert_equal "$output" ""
+	assert_equal "$status" "0"
+	assert_equal "$output" ""
+	assert_equal "$stderr" ""
+}
+
+@test "LSB modules warning is displayed for -a, -v, or with no args, when run in a tty" {
+	export LSB_OS_RELEASE="$BATS_TEST_TMPDIR/os-release"
+
+	echo "$OS_RELEASE_UBUNTU_2204" > "$LSB_OS_RELEASE"
+
+	run_in_tty $LSB_RELEASE
+
+	assert_equal "$status" "0"
+	assert_not_equal "$stderr" ""
+
+	run_in_tty $LSB_RELEASE -a
+
+	assert_equal "$status" "0"
+	assert_not_equal "$stderr" ""
+
+	run_in_tty $LSB_RELEASE -v
+
+	assert_equal "$status" "0"
+	assert_not_equal "$stderr" ""
+}
+
+@test "LSB modules warning is not displayed when run in a tty" {
+	export LSB_OS_RELEASE="$BATS_TEST_TMPDIR/os-release"
+
+	echo "$OS_RELEASE_UBUNTU_2204" > "$LSB_OS_RELEASE"
+
+	run_in_tty $LSB_RELEASE -i
+
+	assert_equal "$status" "0"
+	assert_equal "$stderr" ""
+
+	run_in_tty $LSB_RELEASE -d
+
+	assert_equal "$status" "0"
+	assert_equal "$stderr" ""
+
+	run_in_tty $LSB_RELEASE -r
+
+	assert_equal "$status" "0"
+	assert_equal "$stderr" ""
+
+	run_in_tty $LSB_RELEASE -c
+
+	assert_equal "$status" "0"
+	assert_equal "$stderr" ""
 }
 
 @test "Fields are read from os-release" {
@@ -57,10 +110,11 @@ skip_if_no_unicode () {
 
 	echo "$OS_RELEASE_UBUNTU_2204" > "$LSB_OS_RELEASE"
 
-        run $LSB_RELEASE -a
+	run_in_prog $LSB_RELEASE -a
 
-        assert_equal "$status" "0"
-        assert_equal_fields "$output" "Ubuntu" "Ubuntu 20.04.4 LTS" "20.04" "focal"
+	assert_equal "$status" "0"
+	assert_equal_fields "$output" "Ubuntu" "Ubuntu 20.04.4 LTS" "20.04" "focal"
+	assert_equal "$stderr" ""
 }
 
 @test "Fields are reported as n/a if missing" {
@@ -68,10 +122,11 @@ skip_if_no_unicode () {
 
 	echo "$OS_RELEASE_DEBIAN_SID" > "$LSB_OS_RELEASE"
 
-        run $LSB_RELEASE -a
+	run_in_prog $LSB_RELEASE -a
 
-        assert_equal "$status" "0"
-        assert_equal_fields "$output" "Debian" "Debian GNU/Linux bookworm/sid" "n/a" "n/a"
+	assert_equal "$status" "0"
+	assert_equal_fields "$output" "Debian" "Debian GNU/Linux bookworm/sid" "n/a" "n/a"
+	assert_equal "$stderr" ""
 }
 
 @test "All fields are reported as n/a if missing" {
@@ -79,10 +134,11 @@ skip_if_no_unicode () {
 
 	echo "" > "$LSB_OS_RELEASE"
 
-        run $LSB_RELEASE -a
+	run_in_prog $LSB_RELEASE -a
 
-        assert_equal "$status" "0"
-        assert_equal_fields "$output" "n/a" "n/a" "n/a" "n/a"
+	assert_equal "$status" "0"
+	assert_equal_fields "$output" "n/a" "n/a" "n/a" "n/a"
+	assert_equal "$stderr" ""
 }
 
 @test "Only ID is shown with -i" {
@@ -90,10 +146,11 @@ skip_if_no_unicode () {
 
 	echo "$OS_RELEASE_UBUNTU_2204" > "$LSB_OS_RELEASE"
 
-        run $LSB_RELEASE -i
+	run_in_prog $LSB_RELEASE -i
 
-        assert_equal "$status" "0"
-        assert_equal_ws "$output" "Distributor ID: Ubuntu"
+	assert_equal "$status" "0"
+	assert_equal_ws "$output" "Distributor ID: Ubuntu"
+	assert_equal "$stderr" ""
 }
 
 @test "Only Description is shown with -d" {
@@ -101,10 +158,11 @@ skip_if_no_unicode () {
 
 	echo "$OS_RELEASE_UBUNTU_2204" > "$LSB_OS_RELEASE"
 
-        run $LSB_RELEASE -d
+	run_in_prog $LSB_RELEASE -d
 
-        assert_equal "$status" "0"
-        assert_equal_ws "$output" "Description: Ubuntu 20.04.4 LTS"
+	assert_equal "$status" "0"
+	assert_equal_ws "$output" "Description: Ubuntu 20.04.4 LTS"
+	assert_equal "$stderr" ""
 }
 
 @test "Only Release is shown with -r" {
@@ -112,10 +170,11 @@ skip_if_no_unicode () {
 
 	echo "$OS_RELEASE_UBUNTU_2204" > "$LSB_OS_RELEASE"
 
-        run $LSB_RELEASE -r
+	run_in_prog $LSB_RELEASE -r
 
-        assert_equal "$status" "0"
-        assert_equal_ws "$output" "Release: 20.04"
+	assert_equal "$status" "0"
+	assert_equal_ws "$output" "Release: 20.04"
+	assert_equal "$stderr" ""
 }
 
 @test "Only Codename is shown with -c" {
@@ -123,10 +182,11 @@ skip_if_no_unicode () {
 
 	echo "$OS_RELEASE_UBUNTU_2204" > "$LSB_OS_RELEASE"
 
-        run $LSB_RELEASE -c
+	run_in_prog $LSB_RELEASE -c
 
-        assert_equal "$status" "0"
-        assert_equal_ws "$output" "Codename: focal"
+	assert_equal "$status" "0"
+	assert_equal_ws "$output" "Codename: focal"
+	assert_equal "$stderr" ""
 }
 
 @test "Multiple fields are showns when multiple options are passed" {
@@ -134,10 +194,11 @@ skip_if_no_unicode () {
 
 	echo "$OS_RELEASE_UBUNTU_2204" > "$LSB_OS_RELEASE"
 
-        run $LSB_RELEASE -c -i
+	run_in_prog $LSB_RELEASE -c -i
 
-        assert_equal "$status" "0"
-        assert_equal_fields_ws "$output" "Distributor ID: Ubuntu" "Codename: focal"
+	assert_equal "$status" "0"
+	assert_equal_fields_ws "$output" "Distributor ID: Ubuntu" "Codename: focal"
+	assert_equal "$stderr" ""
 }
 
 @test "Field names are not shown when --short is passed" {
@@ -145,10 +206,11 @@ skip_if_no_unicode () {
 
 	echo "$OS_RELEASE_UBUNTU_2204" > "$LSB_OS_RELEASE"
 
-        run $LSB_RELEASE -c -i --short
+	run_in_prog $LSB_RELEASE -c -i --short
 
-        assert_equal "$status" "0"
-        assert_equal_fields "$output" "Ubuntu" "focal"
+	assert_equal "$status" "0"
+	assert_equal_fields "$output" "Ubuntu" "focal"
+	assert_equal "$stderr" ""
 }
 
 @test "Name is preferred to ID if only different in capitalization" {
@@ -159,10 +221,11 @@ ID=linux
 NAME=LiNuX
 EOF
 
-        run $LSB_RELEASE -i
+	run_in_prog $LSB_RELEASE -i
 
-        assert_equal "$status" "0"
-        assert_equal_fields "$output" "LiNuX"
+	assert_equal "$status" "0"
+	assert_equal_fields "$output" "LiNuX"
+	assert_equal "$stderr" ""
 }
 
 @test "Non-ASCII data in ID is correctly handled" {
@@ -172,10 +235,11 @@ EOF
 
 	echo "$OS_RELEASE_UNICODE" > "$LSB_OS_RELEASE"
 
-        run $LSB_RELEASE -i --short
+	run_in_prog $LSB_RELEASE -i --short
 
-        assert_equal "$status" "0"
-        assert_equal_fields "$output" "Đεбıå№"
+	assert_equal "$status" "0"
+	assert_equal_fields "$output" "Đεбıå№"
+	assert_equal "$stderr" ""
 }
 
 @test "Non-ASCII data in ID/NAME is correctly handled" {
@@ -186,10 +250,11 @@ EOF
 	echo "$OS_RELEASE_UNICODE" > "$LSB_OS_RELEASE"
 	echo 'NAME="đεБIå№"' >> "$LSB_OS_RELEASE"
 
-        run $LSB_RELEASE -i --short
+	run_in_prog $LSB_RELEASE -i --short
 
-        assert_equal "$status" "0"
-        assert_equal_fields "$output" "đεБIå№"
+	assert_equal "$status" "0"
+	assert_equal_fields "$output" "đεБIå№"
+	assert_equal "$stderr" ""
 }
 
 # Fixtures
@@ -225,3 +290,6 @@ ID="đεбıå№"
 PRETTY_NAME="डेबियन bookwork/sid"
 EOD
 )
+
+# SPDX-FileCopyrightText: 2021 Gioele Barabucci
+# SPDX-License-Identifier: ISC
