@@ -5,5 +5,5 @@ Restrictions: breaks-testbed, needs-root
 
 Tests:
  alternative-bin-sh,
-Depends: bats, shellcheck, bash, busybox, dash
+Depends: bats, bats-assert, shellcheck, bash, busybox, dash, mksh
 Restrictions: breaks-testbed, needs-root

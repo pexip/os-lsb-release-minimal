@@ -1,0 +1,33 @@
+when:
+  - event: [push, pull_request, manual]
+
+steps:
+  - name: check-dash
+    image: codeberg.org/gioele/lsb-release-minimal:debian-12
+    commands:
+      - make check
+    depends_on: []
+
+  - name: check-bash
+    image: codeberg.org/gioele/lsb-release-minimal:debian-12
+    commands:
+      - apt install --quiet --no-install-recommends bash
+      - ln -s bash /usr/bin/sh.new && mv /usr/bin/sh.new /usr/bin/sh
+      - /bin/sh -c 'test "$${BASH_VERSION:-x}" != "x"'
+      - make check
+
+  - name: check-busybox
+    image: codeberg.org/gioele/lsb-release-minimal:debian-12
+    commands:
+      - apt install --quiet --no-install-recommends busybox
+      - ln -s busybox /usr/bin/sh.new && mv /usr/bin/sh.new /usr/bin/sh
+      - /bin/sh -c 'test "$${BASH_VERSION:-x}" = "x"'
+      - make check
+
+  - name: check-mksh
+    image: codeberg.org/gioele/lsb-release-minimal:debian-12
+    commands:
+      - apt install --quiet --no-install-recommends mksh
+      - ln -s lksh /usr/bin/sh.new && mv /usr/bin/sh.new /usr/bin/sh
+      - /bin/sh -c 'test "$${KSH_VERSION:-x}" != "x"'
+      - make check

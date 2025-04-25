@@ -2,6 +2,11 @@
 
 set -eu
 
+CURRENT_SHELL=$(readlink -f /bin/sh)
+# shellcheck disable=SC2064 # Evaluate $CURRENT_SHELL now, not at runtime.
+trap "ln -s '$CURRENT_SHELL' /bin/sh.orig; mv /bin/sh.orig /bin/sh" EXIT INT TERM
+
+# Test with dash.
 echo "Pointing /bin/sh to /bin/dash"
 ln -s dash /bin/sh.new
 mv /bin/sh.new /bin/sh
@@ -11,6 +16,7 @@ echo "OK"
 echo "Running the test suite with dash..."
 make check
 
+# Test with bash.
 echo "Pointing /bin/sh to /bin/bash"
 ln -s bash /bin/sh.new
 mv /bin/sh.new /bin/sh
@@ -20,6 +26,7 @@ echo "OK"
 echo "Running the test suite with bash..."
 make check
 
+# Test with busybox.
 echo "Pointing /bin/sh to /bin/busybox"
 ln -s busybox /bin/sh.new
 mv /bin/sh.new /bin/sh
@@ -27,4 +34,14 @@ mv /bin/sh.new /bin/sh
 echo "OK"
 
 echo "Running the test suite with busybox sh..."
+make check
+
+# Test with (legacy) mksh
+echo "Pointing /bin/sh to /bin/lksh"
+ln -s lksh /bin/sh.new
+mv /bin/sh.new /bin/sh
+/bin/sh -c 'test "${KSH_VERSION:-x}" != "x"'
+echo "OK"
+
+echo "Running the test suite with lksh..."
 make check

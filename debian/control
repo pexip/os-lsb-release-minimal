@@ -5,10 +5,11 @@ Maintainer: Pexip AS <packaging@pexip.com>
 XSBC-Pexip-Original-Maintainer: Gioele Barabucci <gioele@svario.it>
 Build-Depends:
  debhelper-compat (= 13),
- bats,
- podlators-perl,
- shellcheck,
-Standards-Version: 4.6.1
+ bats <!nocheck>,
+ bats-assert <!nocheck>,
+ podlators-perl <!nodoc>,
+ shellcheck <!nocheck>,
+Standards-Version: 4.7.0
 Homepage: https://gioele.io/lsb-release-minimal
 Vcs-Browser: https://salsa.debian.org/gioele/lsb-release-minimal
 Vcs-Git: https://salsa.debian.org/gioele/lsb-release-minimal.git
@@ -24,16 +25,8 @@ Description: Linux Standard Base version reporting utility (minimal implementati
  core system that third-party applications written for Linux can
  depend upon.
  .
- The lsb-release command is a simple tool to help identify the Linux
+ The lsb_release command is a simple tool to help identify the Linux
  distribution being used and its compliance with the Linux Standard Base.
  .
  This package contains a bare-bones implementation that uses the
  information in /etc/os-release instead of relying on LSB packages.
-
-Package: lsb-release-minimal
-Architecture: all
-Multi-Arch: foreign
-Depends: lsb-release (>= 12), ${misc:Depends}
-Section: oldlibs
-Description: Linux Standard Base version reporting utility (transitional package)
- This is a transitional package. It can be safely removed.

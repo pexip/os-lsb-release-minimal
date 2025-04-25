@@ -1,3 +1,32 @@
+lsb-release-minimal (12.1-1) unstable; urgency=medium
+
+  * New upstream release
+    - Closes: #1073581
+  * d/control: Add `bats-assert` to the build dependencies
+  * d/control: Mark build dependencies used only for checks
+  * d/control: Mark build dependencies used only for docs
+  * d/t/control: Install `bats-assert` in testbed
+  * d/salsa-ci: Move to canonical location
+  * d/salsa-ci: Enable tests of nocheck and nodoc profiles
+  * d/watch: Update upstream URL
+  * d/gbp.conf: Fully adopt DEP-14 branch layout
+  * d/u/metadata: Add upstream metadata
+  * d/control: Update standards version to 4.7.0, no changes needed
+  * d/copyright: Use 0BSD for Debian packaging
+
+ -- Gioele Barabucci <gioele@svario.it>  Thu, 20 Jun 2024 20:34:48 +0200
+
+lsb-release-minimal (12.0-2) unstable; urgency=medium
+
+  * d/tests/alternative-bin-sh: Test with mksh (lk)sh
+  * d/control: Fix spelling of lsb_release
+  * d/tests/alternative-bin-sh: Reset `/bin/sh` link at exit or in case of error
+    (LP: #2004500)
+  * d/control: Stop building transitional package `lsb-release-minimal`
+  * d/control: Update standards version to 4.6.2, no changes needed
+
+ -- Gioele Barabucci <gioele@svario.it>  Wed, 05 Jul 2023 17:34:50 +0200
+
 lsb-release-minimal (12.0-1+pexip24u2) pexip-bookworm; urgency=medium
 
   * New versioning scheme
