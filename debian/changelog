@@ -1,3 +1,9 @@
+lsb-release-minimal (12.1-1+pexip25u2) pexip-trixie; urgency=medium
+
+  * Trixie build for product distribution
+
+ -- Mark Hymers <mark.hymers@pexip.com>  Thu, 04 Dec 2025 13:41:26 +0000
+
 lsb-release-minimal (12.1-1+pexip25u1) pexip-trixie; urgency=medium
 
   * Initial trixie build
